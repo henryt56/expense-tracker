@@ -1,0 +1,79 @@
+{
+  "name": "expense-tracker",
+  "version": "1.0.0",
+  "main": "./electron/main.js",
+  "description": "Customizable expense tracker desktop app",
+  "scripts": {
+    "start": "concurrently \"npm run start:react\" \"npm run start:electron\"",
+    "start:react": "webpack --watch",
+    "start:electron": "wait-on build/bundle.js && electron .",
+    "prebuild": "node -e \"const fs=require('fs');const path=require('path');const buildDir=path.resolve(__dirname,'build');if(!fs.existsSync(buildDir))fs.mkdirSync(buildDir);const htmlPath=path.join(buildDir,'index.html');if(!fs.existsSync(htmlPath))fs.copyFileSync(path.resolve(__dirname,'public/index.html'),htmlPath);\"",
+    "build": "cross-env NODE_ENV=production webpack --mode production",
+    "package": "npm run build && electron-packager . ExpenseTracker --platform=win32 --arch=x64 --out=release --overwrite --asar=false",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "expense-tracker",
+    "electron",
+    "react",
+    "postgresql"
+  ],
+  "author": "Henry T",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.26.9",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-react": "^7.26.3",
+    "babel-loader": "^10.0.0",
+    "concurrently": "^9.1.2",
+    "copy-webpack-plugin": "^13.0.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^7.1.2",
+    "electron": "^35.0.1",
+    "electron-builder": "^25.1.8",
+    "electron-packager": "^17.1.2",
+    "electron-rebuild": "^3.2.9",
+    "style-loader": "^4.0.0",
+    "wait-on": "^8.0.2",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.9.0",
+    "electron-is-dev": "^3.0.1",
+    "electron-reload": "^2.0.0-alpha.1",
+    "electron-store": "^10.0.1",
+    "pg": "^8.13.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-modal": "^3.16.3"
+  },
+  "build": {
+  "appId": "com.henry-t.expensetracker",
+  "productName": "Expense Tracker",
+  "files": [
+    "build/**/*",
+    "electron/**/*",
+    "package.json"
+  ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": "portable",
+      "sign": false,
+      "certificateFile": null,
+      "certificatePassword": null
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "resolutions": {
+    "electron": "35.0.1"
+  },
+  "package": "electron-packager . ExpenseTracker --platform=win32 --arch=x64 --out=release --overwrite"
+}
